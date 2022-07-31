@@ -6,6 +6,8 @@ import com.test.api_0822_sh.repositories.UserRepository;
 import lombok.AllArgsConstructor;
 import org.springframework.stereotype.Service;
 
+import java.util.List;
+
 @Service
 @AllArgsConstructor
 public class UserService implements IUserService {
@@ -16,7 +18,12 @@ public class UserService implements IUserService {
         return repository.findById(id).orElseThrow(() -> new UserNotFoundException(id));
     }
 
-    public void create(User newUser) {
-        repository.save(newUser);
+    public User create(User newUser) {
+        return repository.save(newUser);
+    }
+
+    @Override
+    public List<User> findAll() {
+        return repository.findAll();
     }
 }
