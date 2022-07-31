@@ -15,7 +15,7 @@ public class UserService implements IUserService {
     private UserRepository repository;
 
     public User findById(Long id) {
-        return repository.findById(id).orElseThrow(() -> new UserNotFoundException(id));
+        return repository.findById(id).orElseThrow(() -> new UserNotFoundException("No user found for id: " + id));
     }
 
     public User create(User newUser) {

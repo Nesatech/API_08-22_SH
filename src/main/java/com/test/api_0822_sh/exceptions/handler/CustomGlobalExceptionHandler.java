@@ -1,26 +1,58 @@
 package com.test.api_0822_sh.exceptions.handler;
 
+import com.test.api_0822_sh.exceptions.models.ErrorDetails;
 import com.test.api_0822_sh.exceptions.users.UserNotFoundException;
 import com.test.api_0822_sh.exceptions.users.UserUnsupportedFieldException;
 import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.ControllerAdvice;
 import org.springframework.web.bind.annotation.ExceptionHandler;
+import org.springframework.web.context.request.WebRequest;
 import org.springframework.web.servlet.mvc.method.annotation.ResponseEntityExceptionHandler;
 
-import javax.servlet.http.HttpServletResponse;
-import java.io.IOException;
+import java.time.LocalDateTime;
+import java.time.format.DateTimeFormatter;
 
 @ControllerAdvice
 public class CustomGlobalExceptionHandler extends ResponseEntityExceptionHandler {
 
+    /**
+     * Handle not found exceptions
+     *
+     * @param ex exception lifted
+     * @param response web request
+     * @return response entity with custom details
+     */
     @ExceptionHandler(UserNotFoundException.class)
-    public void springHandleNotFound(HttpServletResponse response) throws IOException {
-        response.sendError(HttpStatus.NOT_FOUND.value());
+    public ResponseEntity<?> springHandleNotFound(UserNotFoundException ex, WebRequest response) {
+        ErrorDetails errorDetails = new ErrorDetails(LocalDateTime.now().format(DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss")), ex.getMessage(), response.getDescription(false));
+        return new ResponseEntity<>(errorDetails, HttpStatus.NOT_FOUND);
     }
 
+    /**
+     * Handle unsupported fields exceptions
+     *
+     * @param ex exception lifted
+     * @param response web request
+     * @return response entity with custom details
+     */
     @ExceptionHandler(UserUnsupportedFieldException.class)
-    public void springHandleUnsupportedField(HttpServletResponse response) throws IOException {
-        response.sendError(HttpStatus.BAD_REQUEST.value());
+    public ResponseEntity<?> springHandleUnsupportedField(UserUnsupportedFieldException ex, WebRequest response) {
+        ErrorDetails errorDetails = new ErrorDetails(LocalDateTime.now().format(DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss")), ex.getMessage(), response.getDescription(false));
+        return new ResponseEntity<>(errorDetails, HttpStatus.BAD_REQUEST);
+    }
+
+    /**
+     * Handle all other exceptions
+     *
+     * @param ex exception lifted
+     * @param response web request
+     * @return response entity with custom details
+     */
+    @ExceptionHandler(Exception.class)
+    public ResponseEntity<?> globalExceptionHandler(Exception ex, WebRequest response) {
+        ErrorDetails errorDetails = new ErrorDetails(LocalDateTime.now().format(DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss")), ex.getMessage(), response.getDescription(false));
+        return new ResponseEntity<>(errorDetails, HttpStatus.INTERNAL_SERVER_ERROR);
     }
 
 }
