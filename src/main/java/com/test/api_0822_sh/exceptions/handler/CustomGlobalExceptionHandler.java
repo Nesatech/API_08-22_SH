@@ -2,7 +2,7 @@ package com.test.api_0822_sh.exceptions.handler;
 
 import com.test.api_0822_sh.exceptions.models.ErrorDetails;
 import com.test.api_0822_sh.exceptions.users.UserNotFoundException;
-import com.test.api_0822_sh.exceptions.users.UserUnsupportedFieldException;
+import com.test.api_0822_sh.exceptions.users.UserUnauthorizedFieldException;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.ControllerAdvice;
@@ -30,16 +30,16 @@ public class CustomGlobalExceptionHandler extends ResponseEntityExceptionHandler
     }
 
     /**
-     * Handle unsupported fields exceptions
+     * Handle unauthorized fields exceptions
      *
      * @param ex exception lifted
      * @param response web request
      * @return response entity with custom details
      */
-    @ExceptionHandler(UserUnsupportedFieldException.class)
-    public ResponseEntity<?> springHandleUnsupportedField(UserUnsupportedFieldException ex, WebRequest response) {
+    @ExceptionHandler(UserUnauthorizedFieldException.class)
+    public ResponseEntity<?> springHandleUnauthorizedField(UserUnauthorizedFieldException ex, WebRequest response) {
         ErrorDetails errorDetails = new ErrorDetails(LocalDateTime.now().format(DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss")), ex.getMessage(), response.getDescription(false));
-        return new ResponseEntity<>(errorDetails, HttpStatus.BAD_REQUEST);
+        return new ResponseEntity<>(errorDetails, HttpStatus.FORBIDDEN);
     }
 
     /**
