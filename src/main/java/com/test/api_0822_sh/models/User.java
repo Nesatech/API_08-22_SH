@@ -1,5 +1,10 @@
 package com.test.api_0822_sh.models;
 
+import com.fasterxml.jackson.annotation.JsonFormat;
+import com.fasterxml.jackson.databind.annotation.JsonDeserialize;
+import com.fasterxml.jackson.databind.annotation.JsonSerialize;
+import com.fasterxml.jackson.datatype.jsr310.deser.LocalDateDeserializer;
+import com.fasterxml.jackson.datatype.jsr310.ser.LocalDateSerializer;
 import lombok.*;
 import org.hibernate.Hibernate;
 
@@ -24,14 +29,17 @@ public class User {
     private Long id;
     @NonNull
     private String name;
+    @JsonDeserialize(using = LocalDateDeserializer.class)
+    @JsonSerialize(using = LocalDateSerializer.class)
+    @JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "dd-MM-yyyy")
     @NonNull
     private LocalDate birthday;
     @NonNull
     private String country;
     private String phoneNumber;
-    private char gender;
+    private Character gender;
 
-    public User(String name, LocalDate birthday, String country, String phoneNumber, char gender) {
+    public User(String name, LocalDate birthday, String country, String phoneNumber, Character gender) {
         this.name = name;
         this.birthday = birthday;
         this.country = country;

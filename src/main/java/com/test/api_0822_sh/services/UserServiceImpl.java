@@ -16,7 +16,7 @@ import java.util.Set;
 
 @Service
 @AllArgsConstructor
-public class UserService implements IUserService {
+public class UserServiceImpl implements IUserService {
 
     private UserRepository repository;
 
