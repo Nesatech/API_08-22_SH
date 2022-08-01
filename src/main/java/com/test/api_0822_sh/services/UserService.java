@@ -20,11 +20,24 @@ public class UserService implements IUserService {
 
     private UserRepository repository;
 
+    /**
+     * Find a user specified by its id
+     *
+     * @param id id of the user
+     * @return user
+     * throws UserNotFoundException
+     */
     @TrackExecutionTime
     public User findById(Long id) {
         return repository.findById(id).orElseThrow(() -> new UserNotFoundException("No user found for id: " + id));
     }
 
+    /**
+     * After checks, save a new user in DB
+     *
+     * @param newUser user to be registered
+     * @return registered user
+     */
     @TrackExecutionTime
     public User create(User newUser) {
         if (isUserAdult(newUser) && isUserFrench(newUser)) {
@@ -34,6 +47,12 @@ public class UserService implements IUserService {
         }
     }
 
+    /**
+     * Check if a user's country is equal to france
+     *
+     * @param newUser user to be registered
+     * @return boolean userFrench
+     */
     private boolean isUserFrench(User newUser) {
         boolean userFrench = false;
         if (newUser != null) {
@@ -46,6 +65,12 @@ public class UserService implements IUserService {
         return userFrench;
     }
 
+    /**
+     * Check if a user is above 18 years old
+     *
+     * @param newUser user to be registered
+     * @return boolean userAdult
+     */
     private boolean isUserAdult(User newUser) {
         boolean userAdult = false;
         if (newUser != null) {
@@ -57,6 +82,11 @@ public class UserService implements IUserService {
         return userAdult;
     }
 
+    /**
+     * Find all users in DB
+     *
+     * @return List of all users in DB
+     */
     @TrackExecutionTime
     public List<User> findAll() {
         return repository.findAll();

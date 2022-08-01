@@ -13,6 +13,9 @@ import org.springframework.stereotype.Component;
 
 import java.util.Arrays;
 
+/**
+ * AOP logs configuration for method & exceptions information
+ */
 @Aspect
 @Component
 @RequiredArgsConstructor
