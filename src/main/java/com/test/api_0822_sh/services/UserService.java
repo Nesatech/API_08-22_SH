@@ -2,6 +2,7 @@ package com.test.api_0822_sh.services;
 
 import com.test.api_0822_sh.exceptions.users.UserNotFoundException;
 import com.test.api_0822_sh.exceptions.users.UserUnauthorizedFieldException;
+import com.test.api_0822_sh.logging.executionTime.TrackExecutionTime;
 import com.test.api_0822_sh.models.User;
 import com.test.api_0822_sh.repositories.UserRepository;
 import lombok.AllArgsConstructor;
@@ -19,10 +20,12 @@ public class UserService implements IUserService {
 
     private UserRepository repository;
 
+    @TrackExecutionTime
     public User findById(Long id) {
         return repository.findById(id).orElseThrow(() -> new UserNotFoundException("No user found for id: " + id));
     }
 
+    @TrackExecutionTime
     public User create(User newUser) {
         if (isUserAdult(newUser) && isUserFrench(newUser)) {
             return repository.save(newUser);
@@ -54,7 +57,7 @@ public class UserService implements IUserService {
         return userAdult;
     }
 
-    @Override
+    @TrackExecutionTime
     public List<User> findAll() {
         return repository.findAll();
     }
