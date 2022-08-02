@@ -108,6 +108,25 @@ public class UserServiceLayerTest {
         assertThat(savedUser.getCountry()).isEqualTo(user.getCountry());
     }
 
+    @DisplayName("AdultFrenchUser_Success")
+    @Test
+    public void givenAdultFrenchUser_whenUserIsCreated_thenUserInfoIsReceived() {
+        User user = users.get(0);
+
+        when(userRepository.save(any(User.class))).thenReturn(user);
+
+        User savedUser = userService.create(user);
+
+        assertThat(savedUser).isNotNull();
+
+        assertThat(savedUser.getId()).isEqualTo(user.getId());
+        assertThat(savedUser.getName()).isEqualTo(user.getName());
+        assertThat(savedUser.getBirthday()).isEqualTo(user.getBirthday());
+        assertThat(savedUser.getCountry()).isEqualTo(user.getCountry());
+        assertThat(savedUser.getPhoneNumber()).isEqualTo(user.getPhoneNumber());
+        assertThat(savedUser.getGender()).isEqualTo(user.getGender());
+    }
+
     @DisplayName("UserNotFrench_Error")
     @Test
     public void givenUserNotFrench_whenUserIsCreated_thenThrowUserUnauthorizedFieldException() {

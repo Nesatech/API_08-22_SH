@@ -24,6 +24,9 @@ import java.util.ArrayList;
 import java.util.Collection;
 import java.util.List;
 
+/**
+ * Swagger documentation of Api configuration
+ */
 @Configuration
 public class SwaggerConfig {
 
