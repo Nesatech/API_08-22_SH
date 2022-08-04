@@ -30,6 +30,11 @@ import java.util.List;
 @Configuration
 public class SwaggerConfig {
 
+    /**
+     * Build the swagger api documentation
+     *
+     * @return Swagger api
+     */
     @Bean
     public Docket api() {
         return new Docket(DocumentationType.SWAGGER_2)
@@ -40,6 +45,11 @@ public class SwaggerConfig {
                 .build();
     }
 
+    /**
+     * Information about the API for documentation
+     *
+     * @return documentation information
+     */
     private ApiInfo apiInfo() {
         return new ApiInfoBuilder()
                 .title("Test Api 0822 SH Documentation")
@@ -49,7 +59,19 @@ public class SwaggerConfig {
                 .build();
     }
 
-
+    /**
+     * Bean created to fix the start of bean documentationPluginsBootstrapper.
+     * Get endpoints and check if they should be registered
+     *
+     * @param webEndpointsSupplier        webEndpointsSupplier
+     * @param servletEndpointsSupplier    servletEndpointsSupplier
+     * @param controllerEndpointsSupplier controllerEndpointsSupplier
+     * @param endpointMediaTypes          endpointMediaTypes
+     * @param corsProperties              corsProperties
+     * @param webEndpointProperties       webEndpointProperties
+     * @param environment                 environment
+     * @return fixed WebMvcEndpointHandlerMapping
+     */
     // Below methods added for fixing "ApplicationContextException: Failed to start bean 'documentationPluginsBootstrapper';" of SpringBoot/SpringFox
     @Bean
     public WebMvcEndpointHandlerMapping webEndpointServletHandlerMapping(WebEndpointsSupplier webEndpointsSupplier, ServletEndpointsSupplier servletEndpointsSupplier, ControllerEndpointsSupplier controllerEndpointsSupplier, EndpointMediaTypes endpointMediaTypes, CorsEndpointProperties corsProperties, WebEndpointProperties webEndpointProperties, Environment environment) {
@@ -64,6 +86,14 @@ public class SwaggerConfig {
         return new WebMvcEndpointHandlerMapping(endpointMapping, webEndpoints, endpointMediaTypes, corsProperties.toCorsConfiguration(), new EndpointLinksResolver(allEndpoints, basePath), shouldRegisterLinksMapping, null);
     }
 
+    /**
+     * Check if a link should be mapped
+     *
+     * @param webEndpointProperties webEndpointProperties
+     * @param environment           environment
+     * @param basePath              basePath
+     * @return true if link properties discovery is enabled && has text OR if environment of port type is different
+     */
     private boolean shouldRegisterLinksMapping(WebEndpointProperties webEndpointProperties, Environment environment, String basePath) {
         return webEndpointProperties.getDiscovery().isEnabled() && (StringUtils.hasText(basePath) || ManagementPortType.get(environment).equals(ManagementPortType.DIFFERENT));
     }

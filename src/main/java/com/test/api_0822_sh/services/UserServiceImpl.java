@@ -15,7 +15,7 @@ import java.util.List;
 import java.util.Set;
 
 /**
- * User service
+ * User service implementation
  */
 @Service
 @AllArgsConstructor

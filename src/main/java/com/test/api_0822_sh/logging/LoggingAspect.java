@@ -31,10 +31,10 @@ public class LoggingAspect {
     }
 
     /**
-     * Advice that loggers when a method is entered and exited.
+     * Advice that logs when a method is entered and exited.
      *
      * @param joinPoint join point for advice
-     * @return result
+     * @return result the log with custom details
      * @throws Throwable throws IllegalArgumentException
      */
     @Around("springBeanPointcut()")
@@ -58,7 +58,7 @@ public class LoggingAspect {
     }
 
     /**
-     * Advice that loggers methods throwing exceptions.
+     * Advice that logs methods throwing exceptions.
      *
      * @param joinPoint join point for advice
      * @param e         exception

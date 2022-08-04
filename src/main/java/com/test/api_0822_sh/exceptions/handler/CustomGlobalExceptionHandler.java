@@ -22,7 +22,7 @@ public class CustomGlobalExceptionHandler extends ResponseEntityExceptionHandler
     /**
      * Handle not found exceptions
      *
-     * @param ex exception lifted
+     * @param ex       exception lifted
      * @param response web request
      * @return response entity with custom details
      */
@@ -35,7 +35,7 @@ public class CustomGlobalExceptionHandler extends ResponseEntityExceptionHandler
     /**
      * Handle unauthorized fields exceptions
      *
-     * @param ex exception lifted
+     * @param ex       exception lifted
      * @param response web request
      * @return response entity with custom details
      */
@@ -48,7 +48,7 @@ public class CustomGlobalExceptionHandler extends ResponseEntityExceptionHandler
     /**
      * Handle all other exceptions
      *
-     * @param ex exception lifted
+     * @param ex       exception lifted
      * @param response web request
      * @return response entity with custom details
      */

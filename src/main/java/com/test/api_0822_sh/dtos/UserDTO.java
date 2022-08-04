@@ -33,5 +33,4 @@ public class UserDTO {
     private String phoneNumber;
     private Character gender;
 
-
 }
