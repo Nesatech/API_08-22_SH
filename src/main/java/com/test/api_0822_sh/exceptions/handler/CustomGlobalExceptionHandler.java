@@ -42,7 +42,7 @@ public class CustomGlobalExceptionHandler extends ResponseEntityExceptionHandler
     @ExceptionHandler(UserUnauthorizedFieldException.class)
     public ResponseEntity<?> springHandleUnauthorizedField(UserUnauthorizedFieldException ex, WebRequest response) {
         ErrorDetails errorDetails = new ErrorDetails(LocalDateTime.now().format(DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss")), ex.getMessage(), response.getDescription(false));
-        return new ResponseEntity<>(errorDetails, HttpStatus.FORBIDDEN);
+        return new ResponseEntity<>(errorDetails, HttpStatus.BAD_REQUEST);
     }
 
     /**

@@ -104,7 +104,7 @@ public class UserApiControllerIntegrationTest {
 
     @DisplayName("FindById_Error")
     @Test
-    public void getWrongId_whenFindById_then400() throws Exception {
+    public void getWrongId_whenFindById_then404() throws Exception {
         mockMvc.perform(get("/users/3")
                         .contentType(MediaType.APPLICATION_JSON))
 
@@ -137,27 +137,27 @@ public class UserApiControllerIntegrationTest {
 
     @DisplayName("PostNotFrenchUser_Error")
     @Test
-    public void postNotFrenchUser_whenSaveUser_thenStatus403() throws Exception {
+    public void postNotFrenchUser_whenSaveUser_thenStatus400() throws Exception {
         User NotFrenchUser = new User("Jean-Claude", LocalDate.of(1974, 5, 2), "Belgique");
 
         mockMvc.perform(post("/users")
                         .contentType(MediaType.APPLICATION_JSON)
                         .content(asJsonString(NotFrenchUser)))
 
-                .andExpect(status().isForbidden())
+                .andExpect(status().isBadRequest())
         ;
     }
 
     @DisplayName("PostNotAdultUser_Error")
     @Test
-    public void postNotAdultUser_whenSaveUser_thenStatus403() throws Exception {
+    public void postNotAdultUser_whenSaveUser_thenStatus400() throws Exception {
         User NotFrenchUser = new User("Vanessa", LocalDate.of(2006, 5, 2), "France");
 
         mockMvc.perform(post("/users")
                         .contentType(MediaType.APPLICATION_JSON)
                         .content(asJsonString(NotFrenchUser)))
 
-                .andExpect(status().isForbidden())
+                .andExpect(status().isBadRequest())
         ;
     }
 
