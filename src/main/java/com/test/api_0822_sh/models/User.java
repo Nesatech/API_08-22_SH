@@ -5,6 +5,7 @@ import com.fasterxml.jackson.databind.annotation.JsonDeserialize;
 import com.fasterxml.jackson.databind.annotation.JsonSerialize;
 import com.fasterxml.jackson.datatype.jsr310.deser.LocalDateDeserializer;
 import com.fasterxml.jackson.datatype.jsr310.ser.LocalDateSerializer;
+import io.swagger.annotations.ApiModelProperty;
 import lombok.Getter;
 import lombok.Setter;
 import lombok.ToString;
@@ -26,14 +27,20 @@ public class User {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY, generator = "native")
+    @ApiModelProperty(value = "Id of the user", name = "id", hidden = true)
     private Long id;
+    @ApiModelProperty(value = "Name of the user", name = "name", required = true, example = "test name")
     private String name;
     @JsonDeserialize(using = LocalDateDeserializer.class)
     @JsonSerialize(using = LocalDateSerializer.class)
     @JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "dd-MM-yyyy")
+    @ApiModelProperty(value = "Birthday of the user", name = "birthday", required = true, example = "01-01-1901")
     private LocalDate birthday;
+    @ApiModelProperty(value = "Country of the user", name = "country", required = true, example = "France")
     private String country;
+    @ApiModelProperty(value = "Phone number of the user", name = "phoneNumber", example = "0123456789")
     private String phoneNumber;
+    @ApiModelProperty(value = "Gender of the user", name = "gender", example = "M")
     private Character gender;
 
     public User() {
