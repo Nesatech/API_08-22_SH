@@ -1,16 +1,15 @@
 package com.test.api_0822_sh.controllers;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
-import com.test.api_0822_sh.exceptions.users.UserNotFoundException;
-import com.test.api_0822_sh.exceptions.users.UserUnauthorizedFieldException;
 import com.test.api_0822_sh.models.User;
-import com.test.api_0822_sh.services.UserServiceImpl;
+import com.test.api_0822_sh.repositories.UserRepository;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.boot.test.autoconfigure.web.servlet.WebMvcTest;
+import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
+import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.boot.test.mock.mockito.MockBean;
 import org.springframework.http.MediaType;
 import org.springframework.test.web.servlet.MockMvc;
@@ -20,24 +19,26 @@ import java.time.LocalDate;
 import java.time.format.DateTimeFormatter;
 import java.util.Arrays;
 import java.util.List;
+import java.util.Optional;
 
 import static org.hamcrest.Matchers.hasSize;
 import static org.hamcrest.Matchers.is;
 import static org.mockito.ArgumentMatchers.any;
-import static org.mockito.BDDMockito.given;
+import static org.mockito.Mockito.when;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
-@WebMvcTest({UserApiController.class})
-public class UserApiControllerLayerTest {
+@SpringBootTest
+@AutoConfigureMockMvc
+public class UserApiControllerIntegrationTest {
 
     @Autowired
     private MockMvc mockMvc;
 
     @MockBean
-    UserServiceImpl userService;
+    UserRepository userRepository;
 
     private List<User> users;
 
@@ -51,8 +52,8 @@ public class UserApiControllerLayerTest {
 
     @DisplayName("FindAll_Success")
     @Test
-    public void givenUsers_whenFindAll_thenReturnJsonArray() throws Exception {
-        given(userService.findAll()).willReturn(users);
+    public void findAllUser_thenReturnJsonArray() throws Exception {
+        when(userRepository.findAll()).thenReturn(users);
 
         MvcResult mvcResult = mockMvc.perform(get("/users")
                         .contentType(MediaType.APPLICATION_JSON))
@@ -82,8 +83,8 @@ public class UserApiControllerLayerTest {
 
     @DisplayName("FindById_Success")
     @Test
-    public void givenGetUser_whenFindById_thenReturnJsonArray() throws Exception {
-        given(userService.findById(1L)).willReturn(users.get(0));
+    public void findById_thenReturnJsonArray() throws Exception {
+        when(userRepository.findById(1L)).thenReturn(Optional.ofNullable(users.get(0)));
 
         MvcResult mvcResult = mockMvc.perform(get("/users/1")
                         .contentType(MediaType.APPLICATION_JSON))
@@ -103,10 +104,8 @@ public class UserApiControllerLayerTest {
 
     @DisplayName("FindById_Error")
     @Test
-    public void givenGetWrongId_whenFindById_then400() throws Exception {
-        given(userService.findById(1L)).willThrow(new UserNotFoundException(""));
-
-        mockMvc.perform(get("/users/1")
+    public void getWrongId_whenFindById_then400() throws Exception {
+        mockMvc.perform(get("/users/3")
                         .contentType(MediaType.APPLICATION_JSON))
 
                 .andExpect(status().isNotFound())
@@ -115,8 +114,8 @@ public class UserApiControllerLayerTest {
 
     @DisplayName("PostUser_Success")
     @Test
-    public void givenPostUser_whenSaveUser_thenCreateUserStatus201() throws Exception {
-        given(userService.create(any(User.class))).willReturn(users.get(0));
+    public void saveUser_thenCreateUserStatus201() throws Exception {
+        when(userRepository.save(any(User.class))).thenReturn(users.get(0));
 
         MvcResult mvcResult = mockMvc.perform(post("/users")
                         .contentType(MediaType.APPLICATION_JSON)
@@ -136,14 +135,27 @@ public class UserApiControllerLayerTest {
         Assertions.assertEquals("application/json", mvcResult.getResponse().getContentType());
     }
 
-    @DisplayName("PostUnauthorizedUser_Error")
+    @DisplayName("PostNotFrenchUser_Error")
     @Test
-    public void givenPostUnauthorizedUser_whenSaveUser_thenStatus403() throws Exception {
-        given(userService.create(any(User.class))).willThrow(new UserUnauthorizedFieldException(""));
+    public void postNotFrenchUser_whenSaveUser_thenStatus403() throws Exception {
+        User NotFrenchUser = new User("Jean-Claude", LocalDate.of(1974, 5, 2), "Belgique");
 
         mockMvc.perform(post("/users")
                         .contentType(MediaType.APPLICATION_JSON)
-                        .content(asJsonString(users.get(1))))
+                        .content(asJsonString(NotFrenchUser)))
+
+                .andExpect(status().isForbidden())
+        ;
+    }
+
+    @DisplayName("PostNotAdultUser_Error")
+    @Test
+    public void postNotAdultUser_whenSaveUser_thenStatus403() throws Exception {
+        User NotFrenchUser = new User("Vanessa", LocalDate.of(2006, 5, 2), "France");
+
+        mockMvc.perform(post("/users")
+                        .contentType(MediaType.APPLICATION_JSON)
+                        .content(asJsonString(NotFrenchUser)))
 
                 .andExpect(status().isForbidden())
         ;
