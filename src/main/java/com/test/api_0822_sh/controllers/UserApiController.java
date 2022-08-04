@@ -1,5 +1,7 @@
 package com.test.api_0822_sh.controllers;
 
+import com.test.api_0822_sh.dtos.UserDTO;
+import com.test.api_0822_sh.mapper.UserMapper;
 import com.test.api_0822_sh.models.User;
 import com.test.api_0822_sh.services.IUserService;
 import lombok.AllArgsConstructor;
@@ -16,22 +18,23 @@ import java.util.List;
 @RequestMapping("/users")
 public class UserApiController {
 
+    private UserMapper userMapper;
     private IUserService service;
 
     @GetMapping()
-    List<User> findAll() {
-        return service.findAll();
+    List<UserDTO> findAll() {
+        return userMapper.usersToUsersDto(service.findAll());
     }
 
     @GetMapping(value = "/{id}")
-    User findById(@PathVariable("id") Long id) {
-        return service.findById(id);
+    UserDTO findById(@PathVariable("id") Long id) {
+        return userMapper.userToUserDto(service.findById(id));
     }
 
     @PostMapping()
     @ResponseStatus(HttpStatus.CREATED)
-    User saveUser(@RequestBody User newUser) {
-        return service.create(newUser);
+    UserDTO saveUser(@RequestBody User newUser) {
+        return userMapper.userToUserDto(service.create(newUser));
     }
 
 }

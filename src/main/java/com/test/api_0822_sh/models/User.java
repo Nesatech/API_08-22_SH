@@ -5,13 +5,12 @@ import com.fasterxml.jackson.databind.annotation.JsonDeserialize;
 import com.fasterxml.jackson.databind.annotation.JsonSerialize;
 import com.fasterxml.jackson.datatype.jsr310.deser.LocalDateDeserializer;
 import com.fasterxml.jackson.datatype.jsr310.ser.LocalDateSerializer;
-import lombok.*;
+import lombok.Getter;
+import lombok.Setter;
+import lombok.ToString;
 import org.hibernate.Hibernate;
 
-import javax.persistence.Entity;
-import javax.persistence.GeneratedValue;
-import javax.persistence.Id;
-import javax.persistence.Table;
+import javax.persistence.*;
 import java.time.LocalDate;
 import java.util.Objects;
 
@@ -22,25 +21,29 @@ import java.util.Objects;
 @Getter
 @Setter
 @ToString
-@NoArgsConstructor
-@RequiredArgsConstructor
 @Table(name = "`user`") // prevent H2 exception because of 'user' reserved word
 public class User {
 
     @Id
-    @GeneratedValue
+    @GeneratedValue(strategy = GenerationType.IDENTITY, generator = "native")
     private Long id;
-    @NonNull
     private String name;
     @JsonDeserialize(using = LocalDateDeserializer.class)
     @JsonSerialize(using = LocalDateSerializer.class)
     @JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "dd-MM-yyyy")
-    @NonNull
     private LocalDate birthday;
-    @NonNull
     private String country;
     private String phoneNumber;
     private Character gender;
+
+    public User() {
+    }
+
+    public User(String name, LocalDate birthday, String country) {
+        this.name = name;
+        this.birthday = birthday;
+        this.country = country;
+    }
 
     public User(String name, LocalDate birthday, String country, String phoneNumber, Character gender) {
         this.name = name;
