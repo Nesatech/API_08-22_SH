@@ -22,18 +22,18 @@ public class UserApiController {
     private IUserService service;
 
     @GetMapping()
-    List<UserDTO> findAll() {
+    public List<UserDTO> findAll() {
         return userMapper.usersToUsersDto(service.findAll());
     }
 
     @GetMapping(value = "/{id}")
-    UserDTO findById(@PathVariable("id") Long id) {
+    public UserDTO findById(@PathVariable("id") Long id) {
         return userMapper.userToUserDto(service.findById(id));
     }
 
     @PostMapping()
     @ResponseStatus(HttpStatus.CREATED)
-    UserDTO saveUser(@RequestBody User newUser) {
+    public UserDTO saveUser(@RequestBody User newUser) {
         return userMapper.userToUserDto(service.create(newUser));
     }
 
