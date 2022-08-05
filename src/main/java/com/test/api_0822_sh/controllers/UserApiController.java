@@ -2,7 +2,6 @@ package com.test.api_0822_sh.controllers;
 
 import com.test.api_0822_sh.dtos.UserDTO;
 import com.test.api_0822_sh.mapper.UserMapper;
-import com.test.api_0822_sh.models.User;
 import com.test.api_0822_sh.services.IUserService;
 import io.swagger.annotations.*;
 import lombok.AllArgsConstructor;
@@ -66,8 +65,8 @@ public class UserApiController {
             @ApiResponse(code = 201, message = "Success|OK"),
             @ApiResponse(code = 400, message = "Bad request")
     })
-    public UserDTO saveUser(@RequestBody User newUser) {
-        return userMapper.userToUserDto(service.create(newUser));
+    public UserDTO saveUser(@RequestBody UserDTO newUser) {
+        return userMapper.userToUserDto(service.create(userMapper.userDtoToUser(newUser)));
     }
 
 }
